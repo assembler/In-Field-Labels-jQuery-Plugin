@@ -8,25 +8,34 @@
  * http://docs.jquery.com/License
  *
  * @version 0.1.2
+ * @fork https://github.com/assembler/In-Field-Labels-jQuery-Plugin
  */
 (function ($) {
 
-  $.InFieldLabels = function (label, field, options) {
+  $.InFieldLabels = function ($field, options) {
     // To avoid scope issues, use 'base' instead of 'this'
     // to reference this class from internal events and functions.
     var base = this;
-  
-    // Access to jQuery and DOM versions of each element
-    base.$label = $(label);
-    base.label  = label;
+    
+    base.$wrapper = null;
+    base.$field = $field;
+    base.$label = null;
 
-    base.$field = $(field);
-    base.field  = field;
-
-    base.$label.data("InFieldLabels", base);
+    base.$field.data("InFieldLabels", base);
     base.showing = true;
 
     base.init = function () {
+      base.$wrapper = base.$field.wrap('<div class="infield_wrapper" />').parent();
+      base.$label = $('<span>').addClass("infield_label").html(base.$field.attr('data-infield-label'));
+      base.$label.appendTo(base.$wrapper);
+      
+      base.$label.bind('click.infieldlabel', function(e) {
+        e.preventDefault();
+        base.$field.focus();
+        return false;
+      });
+      
+      
       // Merge supplied options with default options
       base.options = $.extend({}, $.InFieldLabels.defaultOptions, options);
 
@@ -119,34 +128,15 @@
     fadeDuration: 300 // How long should it take to animate from 1.0 opacity to the fadeOpacity
   };
 
-
   $.fn.inFieldLabels = function (options) {
     return this.each(function () {
-      // Find input or textarea based on for= attribute
-      // The for attribute on the label must contain the ID
-      // of the input or textarea element
-      var for_attr = $(this).attr('for'), $field;
-      if (!for_attr) {
-        return; // Nothing to attach, since the for field wasn't used
+      var $input = $(this);
+      
+      if($input.is('textarea,input') && $input.not(':checkbox, :radio') && $input.attr('data-infield-label')){
+        (new $.InFieldLabels($input, options));
       }
-
-      // Find the referenced input or textarea element
-      $field = $(
-        "input#" + for_attr + "[type='text']," + 
-        "input#" + for_attr + "[type='search']," + 
-        "input#" + for_attr + "[type='tel']," + 
-        "input#" + for_attr + "[type='url']," + 
-        "input#" + for_attr + "[type='email']," + 
-        "input#" + for_attr + "[type='password']," + 
-        "textarea#" + for_attr
-      );
-
-      if ($field.length === 0) {
-        return; // Again, nothing to attach
-      } 
-
-      // Only create object for input[text], input[password], or textarea
-      (new $.InFieldLabels(this, $field[0], options));
+      
+      return this;
     });
   };
 
