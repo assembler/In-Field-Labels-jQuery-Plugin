@@ -20,13 +20,20 @@
     base.$wrapper = null;
     base.$field = $field;
     base.$label = null;
-
+    base.$originalLabel = $('label[for="' + base.$field.attr('id') + '"]');
+    base.label = base.$field.attr('data-infield-label');
+    
     base.$field.data("InFieldLabels", base);
     base.showing = true;
 
     base.init = function () {
+      if(base.label == "true") {
+        base.label = base.$originalLabel.html();
+        base.$originalLabel.hide();
+      }
+      
       base.$wrapper = base.$field.wrap('<div class="infield_wrapper" />').parent();
-      base.$label = $('<span>').addClass("infield_label").html(base.$field.attr('data-infield-label'));
+      base.$label = $('<span>').addClass("infield_label").html(base.label);
       base.$label.appendTo(base.$wrapper);
       
       base.$label.bind('click.infieldlabel', function(e) {

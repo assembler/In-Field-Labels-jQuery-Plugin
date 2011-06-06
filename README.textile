@@ -2,6 +2,7 @@ h1. Fork info
 
 Uses html5 data-infield-label attribute instead of original label.
 That way you can still use original labels noramally, and use infield ones for additional info (like placeholders)
+If you sate data-infield-label to true, then value of original label would be used.
 
 h2. Use
 
@@ -10,6 +11,10 @@ h3. HTML
 <pre>
 <p>
   <label for="field_id">Label Text</label><br />
-  <input type="text" name="field_id" value="" id="field_id" data-infield-label="Label Text">
+  <input type="text" name="field_id" value="" id="field_id" data-infield-label="enter value here...">
+</p>
+<p>
+  <label for="field_id">Label Text</label><br />
+  <input type="text" name="field_id" value="" id="field_id" data-infield-label="true">
 </p>
 </pre>
