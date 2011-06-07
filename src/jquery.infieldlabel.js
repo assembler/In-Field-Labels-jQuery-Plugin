@@ -135,11 +135,13 @@
     fadeDuration: 300 // How long should it take to animate from 1.0 opacity to the fadeOpacity
   };
 
+  $.InFieldLabels.whitelist = 'textarea, input[type=text], input[type=password], input[type=email], input[type=url], input[type=number], input[type=search], input[type=tel]';
+
   $.fn.inFieldLabels = function (options) {
     return this.each(function () {
       var $input = $(this);
       
-      if($input.is('textarea,input') && $input.not(':checkbox, :radio') && $input.attr('data-infield-label')){
+      if($input.is($.InFieldLabels.whitelist) && $input.attr('data-infield-label')){
         (new $.InFieldLabels($input, options));
       }
       
