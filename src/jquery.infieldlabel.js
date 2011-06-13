@@ -139,9 +139,10 @@
 
   $.fn.inFieldLabels = function (options) {
     return this.each(function () {
-      var $input = $(this);
+      var $input = $(this),
+          api = $input.data("InFieldLabels");
       
-      if($input.is($.InFieldLabels.whitelist) && $input.attr('data-infield-label')){
+      if($input.is($.InFieldLabels.whitelist) && $input.attr('data-infield-label') && !api){
         (new $.InFieldLabels($input, options));
       }
       
